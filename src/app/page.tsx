@@ -1,113 +1,152 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import { User } from '@prisma/client';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import Loading from '../components/Loading';
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+interface JwtPayload {
+	userId: number;
+	exp: number;
 }
+
+/**
+ * User page displaying the user's data.
+ */
+function UserPage() {
+	const [user, setUser] = useState<Omit<User, 'password'> | null>(null); // remove password for security
+	const [error, setError] = useState<string | null>(null);
+	const [loading, setLoading] = useState<boolean>(true);
+	const router = useRouter();
+
+	useEffect(() => {
+		async function fetchUserData() {
+			const token = localStorage.getItem('token');
+
+			if (!token) {
+				setError('Unauthorized access. Please log in.');
+				router.replace('/login');
+				return;
+			}
+
+			try {
+				// Decode the JWT and check its expiration
+				const decoded: JwtPayload = jwtDecode<JwtPayload>(token);
+				const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+				if (decoded.exp < currentTime) {
+					setError('Session expired. Please log in again.');
+					localStorage.removeItem('token');
+					router.replace('/login');
+					return;
+				}
+
+				const response = await axios.get('/api/user', {
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				});
+
+				if (response.data.success) {
+					setUser(response.data.user);
+				} else {
+					setError(response.data.message);
+					router.replace('/login');
+				}
+			} catch (err) {
+				console.error('Error fetching user data:', err);
+				setError('An error occurred while fetching user data.');
+				router.replace('/login');
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		fetchUserData();
+	}, [router]);
+
+	// Logout function using the mock API
+	async function handleLogout() {
+		try {
+			const response = await axios.post('/api/logout');
+			if (response.data.success) {
+				localStorage.removeItem('token');
+				router.replace('/login');
+			} else {
+				setError(response.data.message);
+			}
+		} catch (err) {
+			console.error('Error during logout:', err);
+			setError('An error occurred while logging out.');
+		}
+	}
+
+	if (loading) {
+		return <Loading />;
+	}
+
+	if (error) {
+		return (
+			<div className='min-h-screen flex items-center justify-center bg-gray-100'>
+				<div className='max-w-md w-full bg-white rounded-lg shadow-md p-8'>
+					<p className='text-red-500 text-center'>{error}</p>
+					<button onClick={() => router.replace('/login')} className='btn btn-primary mt-4 w-full'>
+						Go to Login
+					</button>
+				</div>
+			</div>
+		);
+	}
+
+	if (!user) {
+		router.replace('/login');
+		return null;
+	}
+
+	return (
+		<div className='min-h-screen flex items-center justify-center bg-gray-100'>
+			<div className='max-w-md w-full bg-white rounded-lg shadow-md p-8'>
+				<h2 className='text-2xl font-bold mb-6 text-center'>User Profile</h2>
+				<div className='flex justify-center mb-6'>
+					<div className='avatar'>
+						<div className='w-24 h-24 rounded-full overflow-hidden relative'>
+							<Image
+								src='https://www.pngarts.com/files/3/Avatar-PNG-Download-Image.png'
+								alt='User Avatar'
+								width={200}
+								height={200}
+								priority // This ensures that the image is loaded as a priority, improving LCP
+							/>
+						</div>
+					</div>
+				</div>
+				<div className='space-y-4'>
+					<div>
+						<span className='font-bold'>First Name: </span>
+						{user.firstName}
+					</div>
+					<div>
+						<span className='font-bold'>Last Name: </span>
+						{user.lastName}
+					</div>
+					<div>
+						<span className='font-bold'>Email: </span>
+						{user.email}
+					</div>
+					<div>
+						<span className='font-bold'>Date of Birth: </span>
+						{user.dob.toString()}
+					</div>
+					<button onClick={handleLogout} className='btn btn-error mt-6 w-full'>
+						Logout
+					</button>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export default UserPage;

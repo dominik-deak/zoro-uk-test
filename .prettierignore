@@ -34,6 +34,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# Note: `.env` would be ignored in prod, I left it in for the test
-# .env
